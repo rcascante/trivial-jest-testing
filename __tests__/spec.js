@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const chai = require('chai');
-const application = require('../src/main');
+const application = require('../src/main')
 
 
 function loadTemplate(filepath, onLoad) {
@@ -16,79 +16,76 @@ function loadTemplate(filepath, onLoad) {
 }
 
 describe("the game", function () {
-    var app;
+    let questions = [
+        {
+            id: 1,
+            title: '¿Cuántos años tiene María?',
+            answers: [
+                { id: 0, answer: '25' },
+                { id: 1, answer: '33' },
+                { id: 2, answer: '37' }
+            ],
+            correctAnswer: { id: 1 }
+        },
+        {
+            id: 2,
+            title: '¿Cuál es la capital de Zambia?',
+            answers: [
+                { id: 0, answer: 'Lusaka' },
+                { id: 1, answer: 'Harare' },
+                { id: 2, answer: 'Madrid' }
+            ],
+            correctAnswer: { id: 0 }
+        }
+    ]
+    let app;
     beforeEach(function (done) {
         loadTemplate('../views/body.html', function (text) {
             document.body.innerHTML = text;
             app = application();
+            app.setServerData(questions);
             app.start();
             done();
         });
     });
 
-    /* 
-    It checks that when the app starts it loads elements of the page
-    in order to do so, we check if the selected elements are not null
-    */
-    it('loads the page elements', function () {
-        expect(document.querySelector('.page--title')).not.toBeNull();
-        expect(document.querySelector('.start--button')).not.toBeNull();
-        expect(document.querySelector('#next--question--button')).not.toBeNull();
-    });
-
-    /* 
-    It checks that when we click on start button loads the first question and the answer options
-    */
-    it('starts the game', function () {
-        startGame();
-        expect(document.querySelector('.question--title').id).toEqual("2");
-    });
-
-    it('loads the answer options', function () {
-        startGame();
-        expect(document.querySelectorAll('input')).not.toBeNull();
-    });
-
-    /* 
-    It checks that when we click on start button loads the first question and the answer options
-    */
-    it('does not repeat the question', function () {
-        startGame();
-        let firtQuestion = document.querySelector('.question--title').id;
-        displayNextQuestion();
-        let nextQuestion = document.querySelector('.question--title').id
-        expect(firtQuestion).not.toBe(nextQuestion);
-    });
-
-    it('knows that all the questions have been displayed', function () {
-        startGame();
-        displayNextQuestion();
-        displayNextQuestion();
-        displayNextQuestion();
-        displayNextQuestion();
-        expect(document.querySelector('.question--title').id).toBe("2");
-    });
-
-    /* 
-    It checks that when we click on start button loads the first question and the answer options
-    */
-    it('checks if the counter starts', function (done) {
-        let countDown = document.querySelector('.clock');
-        function getCountDown() {
-            expect(countDown.innerHTML).toBe("9");
-            //esperará a que se ejecute done para salir del it, sino haría el setTimeout y saldría, sin realizar getCountDown
-            done();
-        }
-        setTimeout(getCountDown, 1000);
-    });
-
-    function startGame() {
-        let startGameButton = document.querySelector('.start--button');
-        startGameButton.click();
+    function getQuestionTitle() {
+        let questionTitle = document.querySelector('.question--title');
+        return questionTitle;
     }
 
-    function displayNextQuestion() {
+    function expectFirstQuestionRender() {
+        let questionTitle = getQuestionTitle();
+        expect(Number(questionTitle.id)).toEqual(Number(questions[0].id));
+        expect(questionTitle.innerHTML).toEqual(questions[0].title);
+    }
+
+    function startGame() {
+        const startButton = document.querySelector('.start--button');
+        startButton.click();
+        expectFirstQuestionRender();
+    }
+
+    function selectFirstAnswer() {
+        let answer = document.querySelector('input');
+        answer.click();
+    }
+
+    function goToNextQuestion() {
         let nextQuestionButton = document.querySelector('#next--question--button');
         nextQuestionButton.click();
     }
+
+    function expectSecondQuestionRender() {
+        let questionTitle = getQuestionTitle();
+        expect(Number(questionTitle.id)).toEqual(Number(questions[1].id));
+        expect(questionTitle.innerHTML).toEqual(questions[1].title);
+    }
+
+    it('answers the question', function () {
+        startGame();
+        selectFirstAnswer();
+        goToNextQuestion();
+        expectSecondQuestionRender();
+    });
 });
