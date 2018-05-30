@@ -1,19 +1,8 @@
-const fs = require('fs');
+const pug = require('pug');
 const path = require('path');
 const chai = require('chai');
 const application = require('../src/main')
 
-
-function loadTemplate(filepath, onLoad) {
-    const filePath = path.join(__dirname, filepath);
-    fs.readFile(filePath, { encoding: 'utf-8' }, function (err, data) {
-        if (!err) {
-            onLoad(data);
-        } else {
-            console.log(err);
-        }
-    });
-}
 
 describe("the game", function () {
     let questions = [
@@ -39,14 +28,11 @@ describe("the game", function () {
         }
     ]
     let app;
-    beforeEach(function (done) {
-        loadTemplate('../views/body.html', function (text) {
-            document.body.innerHTML = text;
-            app = application();
-            app.setServerData(questions);
-            app.start();
-            done();
-        });
+    beforeEach(function () {
+        document.body.innerHTML = pug.compileFile('./views/index.pug', null)();
+        app = application();
+        app.setServerData(questions);
+        app.start();
     });
 
     function getQuestionTitle() {
