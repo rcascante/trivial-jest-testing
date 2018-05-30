@@ -27,7 +27,7 @@ describe("the game", function () {
     });
 
     /* 
-    We check that when the app starts it loads elements of the page
+    It checks that when the app starts it loads elements of the page
     in order to do so, we check if the selected elements are not null
     */
     it('loads the page elements', function () {
@@ -37,9 +37,8 @@ describe("the game", function () {
     });
 
     /* 
-    We check that when we click on start button loads the first question and the answer options
+    It checks that when we click on start button loads the first question and the answer options
     */
-
     it('starts the game', function () {
         startGame();
         expect(document.querySelector('.question--title').id).toEqual("2");
@@ -51,24 +50,36 @@ describe("the game", function () {
     });
 
     /* 
-    We check that when we click on start button loads the first question and the answer options
+    It checks that when we click on start button loads the first question and the answer options
     */
-
     it('does not repeat the question', function () {
         startGame();
-        let questionTitle = document.querySelector('.question--title').id;
+        let firtQuestion = document.querySelector('.question--title').id;
         displayNextQuestion();
         let nextQuestion = document.querySelector('.question--title').id
         expect(firtQuestion).not.toBe(nextQuestion);
     });
 
-    it('know that all the questions have been displayed', function () {
+    it('knows that all the questions have been displayed', function () {
         startGame();
         displayNextQuestion();
         displayNextQuestion();
         displayNextQuestion();
         displayNextQuestion();
         expect(document.querySelector('.question--title').id).toBe("2");
+    });
+
+    /* 
+    It checks that when we click on start button loads the first question and the answer options
+    */
+    it('checks if the counter starts', function (done) {
+        let countDown = document.querySelector('.clock');
+        function getCountDown() {
+            expect(countDown.innerHTML).toBe("9");
+            //esperará a que se ejecute done para salir del it, sino haría el setTimeout y saldría, sin realizar getCountDown
+            done();
+        }
+        setTimeout(getCountDown, 1000);
     });
 
     function startGame() {
@@ -80,5 +91,4 @@ describe("the game", function () {
         let nextQuestionButton = document.querySelector('#next--question--button');
         nextQuestionButton.click();
     }
-
 });
