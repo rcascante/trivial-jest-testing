@@ -79,14 +79,13 @@ function application() {
         startTimer();
         loadNextQuestion();
     }
-    function onNextQuestion() {
-        loadNextQuestion();
-    }
+
+
     function loadNextQuestion() {
         goToNextQuestion();
         resetCountdown();
-        if (isNotTheEndOfTheGame()) {
-            renderQuestion(currentQuestion());
+        if (isNotTheLastQuestion()) {
+            renderQuestion(getQuestion());
         }
         else {
             gameOver();
@@ -97,18 +96,58 @@ function application() {
         stopTimer();
         resetQuestions();
     }
-    function isNotTheEndOfTheGame() {
+
+    let questionsNavigator = function (questions) {
+        let questionsIndex = -1;
+
+        function isNotTheLastQuestion() {
+            return questionsIndex < questions.length;
+        }
+        function resetQuestions() {
+            questionsIndex = 0;
+        }
+        function goToNextQuestion() {
+            questionsIndex++;
+        }
+        function getQuestion() {
+            if (questionsIndex < 0) {
+                return questions[0];
+            } else if (questionsIndex >= questions.length) {
+                return questions[questions.length - 1];
+            }
+            return questions[questionsIndex];
+        }
+
+        return {
+            isNotTheLastQuestion,
+            resetQuestions,
+            goToNextQuestion,
+            getQuestion
+        }
+    }
+
+    //---------------------------------
+    var questionsIndex = -1;
+
+    function onNextQuestion() {
+        loadNextQuestion();
+    }
+
+    function isNotTheLastQuestion() {
         return questionsIndex < questions.length;
     }
+
     function resetQuestions() {
         questionsIndex = 0;
     }
     function goToNextQuestion() {
         questionsIndex++;
     }
-    function currentQuestion() {
+    function getQuestion() {
         return questions[questionsIndex];
     }
+    //--------------------------------------
+
     function startTimer() {
         timerId = setInterval(function () {
             updateCountdown(onNextQuestion, timeChanged);
@@ -153,10 +192,11 @@ function application() {
     }
 
     return {
-        start: start,
+        start,
         setServerData: function (data) {
             serverData = data;
-        }
+        },
+        questionsNavigator
     }
 }
 

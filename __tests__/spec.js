@@ -4,6 +4,63 @@ const chai = require('chai');
 const application = require('../src/main')
 
 
+describe("questions navigator", function () {
+    let questions = [
+        {
+            id: 1,
+            title: '¿Cuántos años tiene María?',
+            answers: [
+                { id: 0, answer: '25' },
+                { id: 1, answer: '33' },
+                { id: 2, answer: '37' }
+            ],
+            correctAnswer: { id: 1 }
+        },
+        {
+            id: 2,
+            title: '¿Cuál es la capital de Zambia?',
+            answers: [
+                { id: 0, answer: 'Lusaka' },
+                { id: 1, answer: 'Harare' },
+                { id: 2, answer: 'Madrid' }
+            ],
+            correctAnswer: { id: 0 }
+        }
+    ]
+    let questionsNavigator;
+    beforeEach(function () {
+        questionsNavigator = application().questionsNavigator(questions);
+    });
+
+    it("gets a question", function () {
+        questionsNavigator.goToNextQuestion();
+        let getQuestionn = questionsNavigator.getQuestion();
+        expect(questions).toContain(getQuestionn);
+    });
+    it("always points to a question", function () {
+        let getQuestionn = questionsNavigator.getQuestion();
+        expect(questions).toContain(getQuestionn);
+    });
+
+    it("points to the last questions when we arrive to the last question", function () {
+        questionsNavigator.goToNextQuestion();
+        questionsNavigator.goToNextQuestion(); questionsNavigator.goToNextQuestion();
+        let getQuestionn = questionsNavigator.getQuestion();
+        expect(getQuestionn).toEqual(questions[1]);
+    });
+
+    it("does not repeat questions", function () {
+        questionsNavigator.goToNextQuestion();
+        let question1 = questionsNavigator.getQuestion();
+        questionsNavigator.goToNextQuestion();
+        let question2 = questionsNavigator.getQuestion();
+        expect(question1).not.toEqual(question2);
+    });
+
+
+
+});
+
 describe("the game", function () {
     let questions = [
         {
@@ -34,6 +91,31 @@ describe("the game", function () {
         app.setServerData(questions);
         app.start();
     });
+
+    it('answers the question', function () {
+        startGame();
+        selectFirstAnswer();
+        goToNextQuestion();
+        expectSecondQuestionRender();
+    });
+
+    it('restarts de countdown time', function (done) {
+        startGame();
+        setTimeout(function () {
+            expectCounDownTimeToRestart
+            done();
+        }, 1000);
+    });
+
+    function selectCoundownTime() {
+        let countdownTime = document.querySelector('.clock');
+        return countdownTime;
+    }
+
+    function expectCounDownTimeToRestart() {
+        let countdownTime = selectCoundownTime();
+        expect(countdownTime.innerHTML).toEqual('9');
+    }
 
     function getQuestionTitle() {
         let questionTitle = document.querySelector('.question--title');
@@ -67,11 +149,4 @@ describe("the game", function () {
         expect(Number(questionTitle.id)).toEqual(Number(questions[1].id));
         expect(questionTitle.innerHTML).toEqual(questions[1].title);
     }
-
-    it('answers the question', function () {
-        startGame();
-        selectFirstAnswer();
-        goToNextQuestion();
-        expectSecondQuestionRender();
-    });
 });
