@@ -11,6 +11,7 @@ function application() {
     var questionsIndex = -1;
     var timerId;
     var countdown;
+    var questionsNavigator;
 
 
     function start() {
@@ -24,6 +25,7 @@ function application() {
         nextQuestionButton.addEventListener('click', onNextQuestion);
         getQuestions(function (data) {
             questions = data;
+            questionsNavigator = questionsNavigator(questions)
         });
     }
 
@@ -80,12 +82,15 @@ function application() {
         loadNextQuestion();
     }
 
+    function onNextQuestion() {
+        loadNextQuestion();
+    }
 
     function loadNextQuestion() {
-        goToNextQuestion();
+        questionsNavigator.goToNextQuestion();
         resetCountdown();
-        if (isNotTheLastQuestion()) {
-            renderQuestion(getQuestion());
+        if (questionsNavigator.isNotTheLastQuestion()) {
+            renderQuestion(questionsNavigator.getQuestion());
         }
         else {
             gameOver();
@@ -94,10 +99,10 @@ function application() {
     function gameOver() {
         hideContainerPanel();
         stopTimer();
-        resetQuestions();
+        questionsNavigator.resetQuestions();
     }
 
-    let questionsNavigator = function (questions) {
+    function questionsNavigator(questions) {
         let questionsIndex = -1;
 
         function isNotTheLastQuestion() {
@@ -125,28 +130,6 @@ function application() {
             getQuestion
         }
     }
-
-    //---------------------------------
-    var questionsIndex = -1;
-
-    function onNextQuestion() {
-        loadNextQuestion();
-    }
-
-    function isNotTheLastQuestion() {
-        return questionsIndex < questions.length;
-    }
-
-    function resetQuestions() {
-        questionsIndex = 0;
-    }
-    function goToNextQuestion() {
-        questionsIndex++;
-    }
-    function getQuestion() {
-        return questions[questionsIndex];
-    }
-    //--------------------------------------
 
     function startTimer() {
         timerId = setInterval(function () {
