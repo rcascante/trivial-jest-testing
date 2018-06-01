@@ -98,7 +98,6 @@ function application() {
     function gameOver() {
         hideContainerPanel();
         stopTimer();
-        questionsNavigator.resetQuestions();
     }
 
     function questionsNavigator(questions) {
@@ -126,7 +125,6 @@ function application() {
 
         return {
             isNotTheLastQuestion,
-            resetQuestions,
             getNextQuestion
         }
     }
