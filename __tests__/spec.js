@@ -1,7 +1,9 @@
 const pug = require('pug');
 const path = require('path');
 const chai = require('chai');
-const application = require('../src/main')
+const saberGanarGame = require('../src/game')
+const saberGanarQuestionsNavigator = require('../src/questionsNavigator')
+
 
 
 describe("questions navigator", function () {
@@ -29,7 +31,7 @@ describe("questions navigator", function () {
     ]
     let questionsNavigator;
     beforeEach(function () {
-        questionsNavigator = application().questionsNavigator(questions);
+        questionsNavigator = saberGanarQuestionsNavigator.questionsNavigator(questions);
     });
 
     it("gets a question", function () {
@@ -49,6 +51,7 @@ describe("questions navigator", function () {
         expect(question2).not.toEqual(question3);
     });
 
+    //Hasta que punto tiene sentido el test anterior si el siguiente ya compruebas si todas las preguntas han sido visitadas.
 
     it("knows when all questions are visited", function () {
         questionsNavigator.getNextQuestion();
@@ -56,8 +59,6 @@ describe("questions navigator", function () {
         questionsNavigator.getNextQuestion();
         expect(questionsNavigator.isNotTheLastQuestion()).toBeFalsy();
     });
-
-
 
 });
 
@@ -87,7 +88,7 @@ describe("the game", function () {
     let app;
     beforeEach(function () {
         document.body.innerHTML = pug.compileFile('./views/index.pug', null)();
-        app = application();
+        app = saberGanarGame.game(saberGanarQuestionsNavigator.questionsNavigator);
         app.setServerData(questions);
         app.start();
     });
