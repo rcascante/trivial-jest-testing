@@ -87,7 +87,6 @@ function application() {
     }
 
     function loadNextQuestion() {
-        questionsNavigator.goToNextQuestion();
         resetCountdown();
         if (questionsNavigator.isNotTheLastQuestion()) {
             renderQuestion(questionsNavigator.getQuestion());
@@ -115,10 +114,11 @@ function application() {
             questionsIndex++;
         }
         function getQuestion() {
+            goToNextQuestion();
             if (questionsIndex < 0) {
                 return questions[0];
             } else if (questionsIndex >= questions.length) {
-                return questions[questions.length - 1];
+                resetQuestions();
             }
             return questions[questionsIndex];
         }
@@ -126,7 +126,6 @@ function application() {
         return {
             isNotTheLastQuestion,
             resetQuestions,
-            goToNextQuestion,
             getQuestion
         }
     }

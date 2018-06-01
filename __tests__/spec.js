@@ -33,7 +33,6 @@ describe("questions navigator", function () {
     });
 
     it("gets a question", function () {
-        questionsNavigator.goToNextQuestion();
         let getQuestionn = questionsNavigator.getQuestion();
         expect(questions).toContain(getQuestionn);
     });
@@ -42,19 +41,13 @@ describe("questions navigator", function () {
         expect(questions).toContain(getQuestionn);
     });
 
-    it("points to the last questions when we arrive to the last question", function () {
-        questionsNavigator.goToNextQuestion();
-        questionsNavigator.goToNextQuestion(); questionsNavigator.goToNextQuestion();
-        let getQuestionn = questionsNavigator.getQuestion();
-        expect(getQuestionn).toEqual(questions[1]);
-    });
-
     it("does not repeat questions", function () {
-        questionsNavigator.goToNextQuestion();
         let question1 = questionsNavigator.getQuestion();
-        questionsNavigator.goToNextQuestion();
         let question2 = questionsNavigator.getQuestion();
+        let question3 = questionsNavigator.getQuestion();
         expect(question1).not.toEqual(question2);
+        expect(question2).not.toEqual(question3);
+
     });
 
 
