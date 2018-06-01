@@ -23,13 +23,13 @@ function application() {
         radioAnswersList = document.querySelectorAll('.input-radio');
         nextQuestionButton = document.getElementById('next--question--button');
         nextQuestionButton.addEventListener('click', onNextQuestion);
-        getQuestions(function (data) {
+        getNextQuestions(function (data) {
             questions = data;
             questionsNavigator = questionsNavigator(questions)
         });
     }
 
-    function getQuestions(callback) {
+    function getNextQuestions(callback) {
 
         var serverData = serverData || [
             {
@@ -89,7 +89,7 @@ function application() {
     function loadNextQuestion() {
         resetCountdown();
         if (questionsNavigator.isNotTheLastQuestion()) {
-            renderQuestion(questionsNavigator.getQuestion());
+            renderQuestion(questionsNavigator.getNextQuestion());
         }
         else {
             gameOver();
@@ -102,10 +102,11 @@ function application() {
     }
 
     function questionsNavigator(questions) {
-        let questionsIndex = -1;
+        let questionsIndex = 0;
+        let nonVisitedQuestion = true;
 
         function isNotTheLastQuestion() {
-            return questionsIndex < questions.length;
+            return nonVisitedQuestion;
         }
         function resetQuestions() {
             questionsIndex = 0;
@@ -113,20 +114,20 @@ function application() {
         function goToNextQuestion() {
             questionsIndex++;
         }
-        function getQuestion() {
+        function getNextQuestion() {
+            let question = questions[questionsIndex];
             goToNextQuestion();
-            if (questionsIndex < 0) {
-                return questions[0];
-            } else if (questionsIndex >= questions.length) {
+            if (questionsIndex >= questions.length) {
+                nonVisitedQuestion = false;
                 resetQuestions();
             }
-            return questions[questionsIndex];
+            return question;
         }
 
         return {
             isNotTheLastQuestion,
             resetQuestions,
-            getQuestion
+            getNextQuestion
         }
     }
 
