@@ -1,6 +1,4 @@
 const pug = require('pug');
-const path = require('path');
-const chai = require('chai');
 const saberGanarGame = require('../src/game')
 const saberGanarQuestionsNavigator = require('../src/questionsNavigator')
 
