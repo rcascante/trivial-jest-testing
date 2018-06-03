@@ -28,6 +28,8 @@ export default function createGame(createQuestionsNavigator) {
 
     function getNextQuestions(callback) {
 
+
+
         var serverData = serverData || [
             {
                 id: 1,
