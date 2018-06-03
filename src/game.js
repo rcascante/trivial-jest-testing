@@ -1,5 +1,5 @@
 export default function createGame(createQuestionsNavigator) {
-    var serverData;
+    var requestHandler;
     var startButton;
     var questionsContainer;
     var nextQuestionButton;
@@ -21,58 +21,19 @@ export default function createGame(createQuestionsNavigator) {
         radioAnswersList = document.querySelectorAll('.input-radio');
         nextQuestionButton = document.getElementById('next--question--button');
         nextQuestionButton.addEventListener('click', onNextQuestion);
-        getNextQuestions(function (data) {
-            questionsNavigator = createQuestionsNavigator(data)
+        let requestQuestions = requestHandler || getQuestions;
+        requestQuestions(function (questions) {
+            questionsNavigator = createQuestionsNavigator(questions)
         });
     }
 
-    function getNextQuestions(callback) {
-
-
-
-        var serverData = serverData || [
-            {
-                id: 1,
-                title: '¿Cuántos años tiene María?',
-                answers: [
-                    { id: 0, answer: '25' },
-                    { id: 1, answer: '33' },
-                    { id: 2, answer: '37' }
-                ],
-                correctAnswer: { id: 1 }
-            },
-            {
-                id: 2,
-                title: '¿Cuál es la capital de Zambia?',
-                answers: [
-                    { id: 0, answer: 'Lusaka' },
-                    { id: 1, answer: 'Harare' },
-                    { id: 2, answer: 'Madrid' }
-                ],
-                correctAnswer: { id: 0 }
-            },
-            {
-                id: 3,
-                title: '¿Cuál es el nombre completo de Freud?',
-                answers: [
-                    { id: 0, answer: 'Adolf' },
-                    { id: 1, answer: 'Sefarad' },
-                    { id: 2, answer: 'Sigmund' }
-                ],
-                correctAnswer: { id: 2 }
-            },
-            {
-                id: 4,
-                title: '¿Cuál es el animal más rápido del mundo?',
-                answers: [
-                    { id: 0, answer: 'Guepardo' },
-                    { id: 1, answer: 'León' },
-                    { id: 2, answer: 'Tortuga' }
-                ],
-                correctAnswer: { id: 0 }
-            }
-        ];
-        callback(serverData);
+    function getQuestions(callback) {
+        let request = new XMLHttpRequest();
+        request.addEventListener('load', function () {
+            callback(JSON.parse(request.responseText));
+        });
+        request.open('GET', '/api/questions');
+        request.send();
     }
 
     function onStartGame() {
@@ -143,8 +104,8 @@ export default function createGame(createQuestionsNavigator) {
 
     return {
         start,
-        setServerData: function (data) {
-            serverData = data;
+        setRequestHandler: function (handler) {
+            requestHandler = handler;
         }
     }
 }

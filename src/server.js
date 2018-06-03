@@ -7,11 +7,11 @@ app.set('view engine', 'pug');
 app.set('views', 'views');
 
 // ROUTES:
-app.get('/', (request, response) => {
+app.get('/', (req, res) => {
     res.render('index');
 });
 
-app.get('/api/questions', (request, response) => {
+app.get('/api/questions', (req, res) => {
     let questions = [
         {
             id: 1,
@@ -54,8 +54,8 @@ app.get('/api/questions', (request, response) => {
             correctAnswer: { id: 0 }
         }
     ];
-    response.setHeader('Content-Type', 'application/json');
-    response.send(JSON.stringify(questions));
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(questions));
 });
 
 // START APP
