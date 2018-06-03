@@ -6,7 +6,6 @@ export default function createGame(createQuestionsNavigator, client) {
     var questionTitle;
     var questionAnswers;
     var radioAnswersList;
-    var questionsIndex = -1;
     var timerId;
     var countdown;
     let questionsNavigator;

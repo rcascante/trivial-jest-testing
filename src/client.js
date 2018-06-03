@@ -6,6 +6,9 @@ export default function createClient() {
             callback(questions);
         });
         request.open('GET', '/api/questions');
+        request.onerror = function () {
+            console.log("** An error occurred during the transaction");
+        };
         request.send();
     }
     return {
