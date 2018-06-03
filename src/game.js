@@ -1,10 +1,4 @@
-var saberGanar = saberGanar || {};
-
-
-saberGanar.game = function (questionsNavigator) {
-
-
-    var questions = [];
+export default function game(createQuestionsNavigator) {
     var serverData;
     var startButton;
     var questionsContainer;
@@ -15,7 +9,7 @@ saberGanar.game = function (questionsNavigator) {
     var questionsIndex = -1;
     var timerId;
     var countdown;
-    var questionsNavigator;
+    let questionsNavigator;
 
 
     function start() {
@@ -28,8 +22,7 @@ saberGanar.game = function (questionsNavigator) {
         nextQuestionButton = document.getElementById('next--question--button');
         nextQuestionButton.addEventListener('click', onNextQuestion);
         getNextQuestions(function (data) {
-            questions = data;
-            questionsNavigator = questionsNavigator(questions)
+            questionsNavigator = createQuestionsNavigator(data)
         });
     }
 
@@ -150,12 +143,11 @@ saberGanar.game = function (questionsNavigator) {
         start,
         setServerData: function (data) {
             serverData = data;
-        },
-        questionsNavigator
+        }
     }
 }
 
-//be able to import file in node
-if (typeof (module) != 'undefined') {
-    module.exports = saberGanar;
-}
+
+
+
+

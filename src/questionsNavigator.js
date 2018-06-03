@@ -1,6 +1,4 @@
-var saberGanar = saberGanar || {};
-
-saberGanar.questionsNavigator = function (questions) {
+export default function questionsNavigator(questions) {
     let questionsIndex = 0;
     let nonVisitedQuestion = true;
 
@@ -27,9 +25,6 @@ saberGanar.questionsNavigator = function (questions) {
         isNotTheLastQuestion,
         getNextQuestion
     }
-};
-
-//be able to import file in node
-if (typeof (module) != 'undefined') {
-    module.exports = saberGanar;
 }
+
+
