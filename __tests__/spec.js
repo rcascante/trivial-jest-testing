@@ -1,10 +1,8 @@
 const pug = require('pug');
 const path = require('path');
 const chai = require('chai');
-const saberGanarGame = require('../src/game')
-const saberGanarQuestionsNavigator = require('../src/questionsNavigator')
-
-
+import createGame from '../src/game';
+import createQuestionsNavigator from '../src/questionsNavigator';
 
 describe("questions navigator", function () {
     let questions = [
@@ -31,7 +29,7 @@ describe("questions navigator", function () {
     ]
     let questionsNavigator;
     beforeEach(function () {
-        questionsNavigator = saberGanarQuestionsNavigator.questionsNavigator(questions);
+        questionsNavigator = createQuestionsNavigator(questions);
     });
 
     it("gets a question", function () {
@@ -88,7 +86,7 @@ describe("the game", function () {
     let app;
     beforeEach(function () {
         document.body.innerHTML = pug.compileFile('./views/index.pug', null)();
-        app = saberGanarGame.game(saberGanarQuestionsNavigator.questionsNavigator);
+        app = createGame(createQuestionsNavigator);
         app.setServerData(questions);
         app.start();
     });

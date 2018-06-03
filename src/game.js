@@ -1,4 +1,4 @@
-export default function game(createQuestionsNavigator) {
+export default function createGame(createQuestionsNavigator) {
     var serverData;
     var startButton;
     var questionsContainer;
