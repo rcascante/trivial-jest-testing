@@ -1,5 +1,5 @@
-export default function createGame(createQuestionsNavigator) {
-    var requestHandler;
+export default function createGame(createQuestionsNavigator, client) {
+    var getQuestions;
     var startButton;
     var questionsContainer;
     var nextQuestionButton;
@@ -21,8 +21,7 @@ export default function createGame(createQuestionsNavigator) {
         radioAnswersList = document.querySelectorAll('.input-radio');
         nextQuestionButton = document.getElementById('next--question--button');
         nextQuestionButton.addEventListener('click', onNextQuestion);
-        let requestQuestions = requestHandler || getQuestions;
-        requestQuestions(function (questions) {
+        client.getQuestions(function (questions) {
             questionsNavigator = createQuestionsNavigator(questions)
         });
     }
@@ -103,10 +102,7 @@ export default function createGame(createQuestionsNavigator) {
     }
 
     return {
-        start,
-        setRequestHandler: function (handler) {
-            requestHandler = handler;
-        }
+        start
     }
 }
 
