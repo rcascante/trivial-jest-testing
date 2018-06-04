@@ -23,16 +23,9 @@ export default function createGame(createQuestionsNavigator, client) {
         nextQuestionButton.addEventListener('click', onNextQuestion);
         client.getQuestions(function (questions) {
             questionsNavigator = createQuestionsNavigator(questions)
+        }, function (error) {
+            console.log(error)
         });
-    }
-
-    function getQuestions(callback) {
-        let request = new XMLHttpRequest();
-        request.addEventListener('load', function () {
-            callback(JSON.parse(request.responseText));
-        });
-        request.open('GET', '/api/questions');
-        request.send();
     }
 
     function onStartGame() {
@@ -105,8 +98,3 @@ export default function createGame(createQuestionsNavigator, client) {
         start
     }
 }
-
-
-
-
-
